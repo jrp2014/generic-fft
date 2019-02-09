@@ -36,10 +36,10 @@ install:
 script:
   - cabal v2-update
   - rm -fv cabal.project cabal.project.local
-  - cabal v2-configure #-v2  
+  - cabal v2-configure -v --enable-tests --enable-benchmarks
   - cabal v2-build
-#  - cabal v2-test --enable-test
-#  - cabal v2-bench -- enable-benchmarks
+#  - cabal v2-test
+#  - cabal v2-bench
   - DISTDIR=$(mktemp -d /tmp/dist-test.XXXX)
   - cabal v2-sdist
   - mv dist-newstyle/sdist/*.tar.gz ${DISTDIR}
