@@ -36,7 +36,8 @@ install:
 script:
   - cabal v2-update
   - rm -fv cabal.project cabal.project.local
-  - cabal v2-configure -v --enable-tests --enable-benchmarks
+# add -v or -v2 to the following to get more detail
+  - cabal v2-configure --enable-tests --enable-benchmarks
   - cabal v2-build
 #  - cabal v2-test
 #  - cabal v2-bench
