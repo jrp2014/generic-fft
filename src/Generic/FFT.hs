@@ -19,6 +19,7 @@
 module Generic.FFT
   ( dft
   , idft
+  , dct
   , HasFFT(..)
   ) where
 
@@ -31,7 +32,7 @@ import Data.Functor ((<$>))
 import Data.Monoid (Monoid(..), Sum(..), (<>))
 import Data.Traversable (Traversable(..), mapAccumL)
 
-import Data.Complex (Complex(..), conjugate)
+import Data.Complex (Complex(..), conjugate, realPart)
 import Data.Tuple (swap)
 
 import Data.UniformPair
@@ -61,7 +62,8 @@ infixr 1 -->
 (-->) :: (a' -> a) -> (b -> b') -> ((a -> b) -> (a' -> b'))
 (f --> h) g = h . g . f
 
-type C = Complex Double
+type R = Double
+type C = Complex R
 
 scanL :: (Traversable f, Monoid a) => (a, f a) -> (f a, a)
 scanL (a0, as) = swap (mapAccumL h a0 as)
@@ -119,6 +121,10 @@ idft = fmap ((/ fromIntegral n) . conjugate) . dft . fmap conjugate
     indices :: f Int
     (indices, n) = counts
 
+-- Inefficinet; doesn't exploit symmetry, but a starting point for testing
+dct :: TA f => Unop (f R)
+dct = fmap realPart . dft . fmap (:+ 0)
+
 -- Powers of 'uroot' needed in the DFT:
 -- $e^{\frac{-i 2\pi k n}{N}}$ for $k,n = 0,\ldots,N$:
 rootses ::
@@ -158,6 +164,9 @@ instance (TAH f f', IsNat n) => HasFFT (B.T f n) (T.T f' n) where
 instance (TAH f f', IsNat n) => HasFFT (T.T f n) (B.T f' n) where
   fft (T.L a) = B.L a
   fft (T.B t) = B.B (fftC t)
+
+instance HasFFT [] [] where
+  fft = dft
 
 --     Variable s `f, f' occur more often than in the instance head
 --       in the constraint: TAH f
