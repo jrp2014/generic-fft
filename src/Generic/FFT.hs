@@ -18,6 +18,7 @@
 ----------------------------------------------------------------------
 module Generic.FFT
   ( dft
+  , idft
   , HasFFT(..)
   ) where
 
@@ -220,6 +221,9 @@ fftC' = fftsT' . transpose . twiddle . fftsT'
 -- {1, 0, 0, 0, ...} <=DFT=> {1, 1, 1, 1, ...}\ 
 -- {1, -1, 1, -1, 1, -1, ...} <=DFT=> {0, 0, ... , N, 0, 0, ...} (where the 'N' occurs at the N/2 position in the output vector.
 -- dft . idft ~= id
+-- TODO :: show some example outputs and add a series of Quickcheck tests to
+-- validate them.
+-- TODO: make B / Pair showable
 
 _p1 :: Pair C
 _p1 = 1 :# 0
