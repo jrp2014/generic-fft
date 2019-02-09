@@ -1,0 +1,30 @@
+language: haskell
+dist: trusty
+
+cache:
+  directories:
+    - $HOME/.cabal/store
+
+cabal: "2.4"
+
+matrix:
+  include:
+    - ghc: "8.6.3"
+    - ghc: "8.4.4"
+    - ghc: "8.2.2"
+    - ghc: "8.0.2"
+    - ghc: "7.10.3"
+    - ghc: "7.8.4"
+    - ghc: "7.6.3"
+    - ghc: "6.12.3"
+
+install:
+  - cabal --version
+  - ghc --version
+
+script:
+  - cabal v2-update
+  - cabal v2-configure -v2  
+  - cabal v2-build
+#  - cabal v2-test --enable-test
+#  - cabal v2-bench -- enable-benchmarks
